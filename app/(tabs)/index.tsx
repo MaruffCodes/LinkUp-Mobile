@@ -1,31 +1,35 @@
-import { StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, FlatList, View, SafeAreaView } from 'react-native';
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+// Using standard React Native components for better control over LinkedIn colors
+import Posts from '../src/Data/Posts.js';
+import PostCard from '@/components/Feed/PostCard';
 
 export default function TabOneScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={Posts}
+        // FIX: Added the 'return' keyword so the PostCard actually renders
+        renderItem={({ item }) => {
+          return <PostCard post={item} />;
+        }}
+        keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={styles.listPadding}
+        showsVerticalScrollIndicator={false}
+        // LinkedIn style: Adds a bit of space at the very top of the list
+        ListHeaderComponent={<View style={{ height: 8 }} />}
+      />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f3f2ef', // Official LinkedIn Gray background
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  listPadding: {
+    paddingBottom: 20,
   },
 });
